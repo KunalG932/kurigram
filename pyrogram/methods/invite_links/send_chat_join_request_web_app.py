@@ -16,29 +16,34 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from enum import auto
+from typing import Union
+import pyrogram
+from pyrogram import raw
 
-from .auto_name import AutoName
 
+class SendChatJoinRequestWebApp:
+    async def send_chat_join_request_web_app(
+        self: "pyrogram.Client",
+        query_id: Union[int, str],
+        web_app_url: str,
+    ) -> bool:
+        """Send a Web App to a user who requested to join a chat.
 
-class ParseMode(AutoName):
-    """Parse mode enumeration used in various places to set a specific parse mode"""
+        Parameters:
+            query_id (``int`` | ``str``):
+                Unique identifier of the query.
 
-    DEFAULT = auto()
-    "Default mode. Markdown and HTML combined"
+            web_app_url (``str``):
+                The URL of the Web App.
 
-    MARKDOWN = auto()
-    "Markdown only mode"
+        Returns:
+            ``bool``: True on success.
+        """
+        await self.invoke(
+            raw.functions.bots.SetJoinChatResults(
+                query_id=int(query_id),
+                result=raw.types.JoinChatBotResultWebView(url=web_app_url)
+            )
+        )
 
-    HTML = auto()
-    "HTML only mode"
-
-    DISABLED = auto()
-    "Disabled mode"
-
-    RICH_MARKDOWN = auto()
-    "Rich Markdown mode (sent as InputRichMessageMarkdown)"
-
-    RICH_HTML = auto()
-    "Rich HTML mode (sent as InputRichMessageHTML)"
-
+        return True

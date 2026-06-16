@@ -104,6 +104,7 @@ from .reaction import Reaction
 from .refunded_payment import RefundedPayment
 from .reply_parameters import ReplyParameters
 from .restriction_reason import RestrictionReason
+from .rich_message import RichMessage
 from .saved_credentials import SavedCredentials
 from .screenshot_taken import ScreenshotTaken
 from .star_amount import StarAmount
@@ -240,6 +241,7 @@ __all__ = [
     "RefundedPayment",
     "ReplyParameters",
     "RestrictionReason",
+    "RichMessage",
     "SavedCredentials",
     "ScreenshotTaken",
     "StarAmount",

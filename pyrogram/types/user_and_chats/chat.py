@@ -669,6 +669,8 @@ class Chat(Object):
         uses_unofficial_app: Optional[bool] = None,
         accepted_gift_types: Optional["types.AcceptedGiftTypes"] = None,
         note: Optional["types.FormattedText"] = None,
+        guard_bot: Optional["types.User"] = None,
+        guard_bot_id: Optional[int] = None,
         raw: Optional[Union["raw.types.UserFull", "raw.types.ChatFull", "raw.types.ChannelFull"]] = None
     ):
         super().__init__(client)
@@ -809,6 +811,8 @@ class Chat(Object):
         self.uses_unofficial_app = uses_unofficial_app
         self.accepted_gift_types = accepted_gift_types
         self.note = note
+        self.guard_bot = guard_bot
+        self.guard_bot_id = guard_bot_id
         self.raw = raw
 
     # region Deprecated
@@ -1258,6 +1262,10 @@ class Chat(Object):
         parsed_chat.gift_count = channel.stargifts_count
         parsed_chat.sticker_set_name = getattr(channel.stickerset, "short_name", None)
         parsed_chat.is_paid_messages_available = channel.paid_messages_available
+
+        parsed_chat.guard_bot_id = getattr(channel, "guard_bot_id", None)
+        if parsed_chat.guard_bot_id and parsed_chat.guard_bot_id in users:
+            parsed_chat.guard_bot = types.User._parse(client, users[parsed_chat.guard_bot_id])
 
         return parsed_chat
 

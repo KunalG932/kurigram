@@ -30,7 +30,7 @@ class SendMessage:
     async def send_message(
         self: "pyrogram.Client",
         chat_id: Union[int, str],
-        text: str,
+        text: Optional[str] = None,
         parse_mode: Optional["enums.ParseMode"] = None,
         entities: Optional[List["types.MessageEntity"]] = None,
         link_preview_options: Optional["types.LinkPreviewOptions"] = None,
@@ -53,6 +53,9 @@ class SendMessage:
             "types.ReplyKeyboardRemove",
             "types.ForceReply"
         ]] = None,
+        rich_message: Optional[Union[str, "raw.base.InputRichMessage"]] = None,
+        is_rtl: Optional[bool] = None,
+        skip_entity_detection: Optional[bool] = None,
 
         reply_to_message_id: Optional[int] = None,
         reply_to_chat_id: Optional[Union[int, str]] = None,
@@ -260,13 +263,51 @@ class SendMessage:
                 show_above_text=show_caption_above_media
             )
 
-        link_preview_options = link_preview_options or self.link_preview_options
+        parse_mode = parse_mode or self.parse_mode
 
+        if parse_mode == enums.ParseMode.RICH_MARKDOWN:
+            rich_message = raw.types.InputRichMessageMarkdown(
+                markdown=text or "",
+                rtl=is_rtl,
+                noautolink=skip_entity_detection
+            )
+            text = None
+            parse_mode = None
+        elif parse_mode == enums.ParseMode.RICH_HTML:
+            rich_message = raw.types.InputRichMessageHTML(
+                html=text or "",
+                rtl=is_rtl,
+                noautolink=skip_entity_detection
+            )
+            text = None
+            parse_mode = None
+
+        if rich_message is not None:
+            if isinstance(rich_message, str):
+                if parse_mode == enums.ParseMode.HTML:
+                    rich_message = raw.types.InputRichMessageHTML(
+                        html=rich_message,
+                        rtl=is_rtl,
+                        noautolink=skip_entity_detection
+                    )
+                else:
+                    rich_message = raw.types.InputRichMessageMarkdown(
+                        markdown=rich_message,
+                        rtl=is_rtl,
+                        noautolink=skip_entity_detection
+                    )
+            else:
+                if is_rtl is not None:
+                    rich_message.rtl = is_rtl
+                if skip_entity_detection is not None:
+                    rich_message.noautolink = skip_entity_detection
+
+        text = text or ""
         message, entities = (await utils.parse_text_entities(self, text, parse_mode, entities)).values()
 
         peer = await self.resolve_peer(chat_id)
 
-        if link_preview_options and link_preview_options.url:
+        if link_preview_options and link_preview_options.url and not rich_message:
             rpc = raw.functions.messages.SendMedia(
                 peer=peer,
                 media=raw.types.InputMediaWebPage(
@@ -317,7 +358,8 @@ class SendMessage:
                 message=message,
                 entities=entities,
                 noforwards=protect_content,
-                effect=effect_id
+                effect=effect_id,
+                rich_message=rich_message
             )
 
         r = await self.invoke(rpc, business_connection_id=business_connection_id)

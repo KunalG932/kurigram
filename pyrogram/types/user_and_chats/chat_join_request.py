@@ -54,7 +54,8 @@ class ChatJoinRequest(Object, Update):
         from_user: "types.User",
         date: datetime,
         bio: str = None,
-        invite_link: "types.ChatInviteLink" = None
+        invite_link: "types.ChatInviteLink" = None,
+        query_id: int = None
     ):
         super().__init__(client)
 
@@ -63,6 +64,7 @@ class ChatJoinRequest(Object, Update):
         self.date = date
         self.bio = bio
         self.invite_link = invite_link
+        self.query_id = query_id
 
     @staticmethod
     def _parse(
@@ -79,6 +81,7 @@ class ChatJoinRequest(Object, Update):
             date=utils.timestamp_to_datetime(update.date),
             bio=update.about,
             invite_link=types.ChatInviteLink._parse(client, update.invite, users),
+            query_id=getattr(update, "query_id", None),
             client=client
         )
 
@@ -136,4 +139,46 @@ class ChatJoinRequest(Object, Update):
         return await self._client.decline_chat_join_request(
             chat_id=self.chat.id,
             user_id=self.from_user.id
+        )
+
+    async def answer(self, result: str) -> bool:
+        """Bound method *answer* of :obj:`~pyrogram.types.ChatJoinRequest`.
+        
+        Shortcut for:
+        
+        .. code-block:: python
+        
+            await client.answer_chat_join_request_query(
+                query_id=request.query_id,
+                result=result
+            )
+            
+        Parameters:
+            result (``str``):
+                The result of the query. Can be "approve", "decline", or "queue".
+        """
+        return await self._client.answer_chat_join_request_query(
+            query_id=self.query_id,
+            result=result
+        )
+
+    async def send_web_app(self, web_app_url: str) -> bool:
+        """Bound method *send_web_app* of :obj:`~pyrogram.types.ChatJoinRequest`.
+        
+        Shortcut for:
+        
+        .. code-block:: python
+        
+            await client.send_chat_join_request_web_app(
+                query_id=request.query_id,
+                web_app_url=web_app_url
+            )
+            
+        Parameters:
+            web_app_url (``str``):
+                The web app url to show the user.
+        """
+        return await self._client.send_chat_join_request_web_app(
+            query_id=self.query_id,
+            web_app_url=web_app_url
         )

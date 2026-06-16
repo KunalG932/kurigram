@@ -786,6 +786,7 @@ class Message(Object, Update):
         summary_language_code: Optional[str] = None,
         guest_bot_caller_user: Optional["types.User"] = None,
         guest_bot_caller_chat: Optional["types.Chat"] = None,
+        rich_message: Optional["types.RichMessage"] = None,
         raw: Optional["raw.types.Message"] = None
     ):
         super().__init__(client)
@@ -952,6 +953,7 @@ class Message(Object, Update):
         self.summary_language_code = summary_language_code
         self.guest_bot_caller_user = guest_bot_caller_user
         self.guest_bot_caller_chat = guest_bot_caller_chat
+        self.rich_message = rich_message
         self.raw = raw
 
     @staticmethod
@@ -1762,6 +1764,7 @@ class Message(Object, Update):
             summary_language_code=message.summary_from_language,
             guest_bot_caller_user=types.User._parse(client, users.get(utils.get_raw_peer_id(message.guestchat_via_from))),
             guest_bot_caller_chat=types.Chat._parse_chat(client, chats.get(utils.get_raw_peer_id(message.guestchat_via_from))),
+            rich_message=types.RichMessage._parse(client, getattr(message, "rich_message", None)),
             raw=message,
             client=client
         )

@@ -34,6 +34,8 @@ from .get_chat_invite_link_joiners import GetChatInviteLinkJoiners
 from .get_chat_invite_link_joiners_count import GetChatInviteLinkJoinersCount
 from .get_chat_join_requests import GetChatJoinRequests
 from .revoke_chat_invite_link import RevokeChatInviteLink
+from .answer_chat_join_request_query import AnswerChatJoinRequestQuery
+from .send_chat_join_request_web_app import SendChatJoinRequestWebApp
 
 
 class InviteLinks(
@@ -53,6 +55,8 @@ class InviteLinks(
     DeclineChatJoinRequest,
     ApproveAllChatJoinRequests,
     DeclineAllChatJoinRequests,
-    GetChatJoinRequests
+    GetChatJoinRequests,
+    AnswerChatJoinRequestQuery,
+    SendChatJoinRequestWebApp
 ):
     pass

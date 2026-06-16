@@ -31,6 +31,9 @@ class SendMessageDraft:
         message_thread_id: Optional[int] = None,
         parse_mode: Optional["enums.ParseMode"] = None,
         entities: Optional[List["types.MessageEntity"]] = None,
+        rich_message: Optional[Union[str, "raw.base.InputRichMessage"]] = None,
+        is_rtl: Optional[bool] = None,
+        skip_entity_detection: Optional[bool] = None,
     ) -> bool:
         """Use this method to stream a partial message to a user while the message is being generated.
 
@@ -63,6 +66,9 @@ class SendMessageDraft:
             entities (List of :obj:`~pyrogram.types.MessageEntity`):
                 List of special entities that appear in message text, which can be specified instead of *parse_mode*.
 
+            rich_message (:obj:`~pyrogram.raw.base.InputRichMessage`, *optional*):
+                The rich formatted message draft to be streamed.
+
         Returns:
             ``bool``: On success, True is returned.
 
@@ -91,15 +97,62 @@ class SendMessageDraft:
                 await app.send_message(chat_id, text)
 
         """
+        parse_mode = parse_mode or self.parse_mode
+
+        if parse_mode == enums.ParseMode.RICH_MARKDOWN:
+            rich_message = raw.types.InputRichMessageMarkdown(
+                markdown=text or "",
+                rtl=is_rtl,
+                noautolink=skip_entity_detection
+            )
+            text = ""
+            parse_mode = None
+        elif parse_mode == enums.ParseMode.RICH_HTML:
+            rich_message = raw.types.InputRichMessageHTML(
+                html=text or "",
+                rtl=is_rtl,
+                noautolink=skip_entity_detection
+            )
+            text = ""
+            parse_mode = None
+
+        if rich_message is not None:
+            if isinstance(rich_message, str):
+                if parse_mode == enums.ParseMode.HTML:
+                    rich_message = raw.types.InputRichMessageHTML(
+                        html=rich_message,
+                        rtl=is_rtl,
+                        noautolink=skip_entity_detection
+                    )
+                else:
+                    rich_message = raw.types.InputRichMessageMarkdown(
+                        markdown=rich_message,
+                        rtl=is_rtl,
+                        noautolink=skip_entity_detection
+                    )
+            else:
+                if is_rtl is not None:
+                    rich_message.rtl = is_rtl
+                if skip_entity_detection is not None:
+                    rich_message.noautolink = skip_entity_detection
+
+        if rich_message is not None:
+            action = raw.types.InputSendMessageRichMessageDraftAction(
+                random_id=draft_id,
+                rich_message=rich_message
+            )
+        else:
+            action = raw.types.SendMessageTextDraftAction(
+                random_id=draft_id,
+                text=await types.FormattedText(
+                    text=text, parse_mode=parse_mode, entities=entities
+                ).write(self),
+            )
+
         return await self.invoke(
             raw.functions.messages.SetTyping(
                 peer=await self.resolve_peer(chat_id),
-                action=raw.types.SendMessageTextDraftAction(
-                    random_id=draft_id,
-                    text=await types.FormattedText(
-                        text=text, parse_mode=parse_mode, entities=entities
-                    ).write(self),
-                ),
+                action=action,
                 top_msg_id=message_thread_id,
             )
         )

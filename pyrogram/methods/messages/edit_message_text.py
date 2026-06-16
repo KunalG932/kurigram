@@ -31,13 +31,16 @@ class EditMessageText:
         self: "pyrogram.Client",
         chat_id: Union[int, str],
         message_id: int,
-        text: str,
+        text: Optional[str] = None,
         parse_mode: Optional["enums.ParseMode"] = None,
         entities: List["types.MessageEntity"] = None,
         link_preview_options: "types.LinkPreviewOptions" = None,
         schedule_date: datetime = None,
         business_connection_id: str = None,
         reply_markup: "types.InlineKeyboardMarkup" = None,
+        rich_message: Optional[Union[str, "raw.base.InputRichMessage"]] = None,
+        is_rtl: Optional[bool] = None,
+        skip_entity_detection: Optional[bool] = None,
 
         show_caption_above_media: bool = None,
         disable_web_page_preview: bool = None,
@@ -55,7 +58,7 @@ class EditMessageText:
             message_id (``int``):
                 Message identifier in the chat specified in chat_id.
 
-            text (``str``):
+            text (``str``, *optional*):
                 New text of the message.
 
             parse_mode (:obj:`~pyrogram.enums.ParseMode`, *optional*):
@@ -77,6 +80,9 @@ class EditMessageText:
             reply_markup (:obj:`~pyrogram.types.InlineKeyboardMarkup`, *optional*):
                 An InlineKeyboardMarkup object.
 
+            rich_message (``str`` | :obj:`~pyrogram.raw.base.InputRichMessage`, *optional*):
+                The rich formatted message (HTML or Markdown string, or raw InputRichMessage) to replace the text with.
+
         Returns:
             :obj:`~pyrogram.types.Message`: On success, the edited message is returned.
 
@@ -86,12 +92,8 @@ class EditMessageText:
                 # Simple edit text
                 await app.edit_message_text(chat_id, message_id, "new text")
 
-                # Take the same text message, remove the web page preview only
-                from pyrogram import types
-
-                await app.edit_message_text(
-                    chat_id, message_id, message.text,
-                    link_preview_options=types.LinkPreviewOptions(is_disabled=True))
+                # Edit message with a markdown rich message
+                await app.edit_message_text(chat_id, message_id, rich_message="## Heading\n\n- List item")
         """
         if any(
             (
@@ -116,6 +118,49 @@ class EditMessageText:
 
         link_preview_options = link_preview_options or self.link_preview_options
 
+        parse_mode = parse_mode or self.parse_mode
+
+        if parse_mode == enums.ParseMode.RICH_MARKDOWN:
+            rich_message = raw.types.InputRichMessageMarkdown(
+                markdown=text or "",
+                rtl=is_rtl,
+                noautolink=skip_entity_detection
+            )
+            text = None
+            parse_mode = None
+        elif parse_mode == enums.ParseMode.RICH_HTML:
+            rich_message = raw.types.InputRichMessageHTML(
+                html=text or "",
+                rtl=is_rtl,
+                noautolink=skip_entity_detection
+            )
+            text = None
+            parse_mode = None
+
+        if rich_message is not None:
+            if isinstance(rich_message, str):
+                if parse_mode == enums.ParseMode.HTML:
+                    rich_message = raw.types.InputRichMessageHTML(
+                        html=rich_message,
+                        rtl=is_rtl,
+                        noautolink=skip_entity_detection
+                    )
+                else:
+                    rich_message = raw.types.InputRichMessageMarkdown(
+                        markdown=rich_message,
+                        rtl=is_rtl,
+                        noautolink=skip_entity_detection
+                    )
+            else:
+                if is_rtl is not None:
+                    rich_message.rtl = is_rtl
+                if skip_entity_detection is not None:
+                    rich_message.noautolink = skip_entity_detection
+
+        text_entities = {}
+        if text is not None:
+            text_entities = await utils.parse_text_entities(self, text, parse_mode, entities)
+
         r = await self.invoke(
             raw.functions.messages.EditMessage(
                 peer=await self.resolve_peer(chat_id),
@@ -134,7 +179,8 @@ class EditMessageText:
                 ),
                 schedule_date=utils.datetime_to_timestamp(schedule_date),
                 reply_markup=await reply_markup.write(self) if reply_markup else None,
-                **await utils.parse_text_entities(self, text, parse_mode, entities)
+                rich_message=rich_message,
+                **text_entities
             ),
             business_connection_id=business_connection_id
         )
