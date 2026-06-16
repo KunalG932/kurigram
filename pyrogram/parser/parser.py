@@ -42,10 +42,10 @@ class Parser:
         if mode == enums.ParseMode.DEFAULT:
             return await self.markdown.parse(text)
 
-        if mode == enums.ParseMode.MARKDOWN:
+        if mode in (enums.ParseMode.MARKDOWN, enums.ParseMode.RICH_MARKDOWN):
             return await self.markdown.parse(text, True)
 
-        if mode == enums.ParseMode.HTML:
+        if mode in (enums.ParseMode.HTML, enums.ParseMode.RICH_HTML):
             return await self.html.parse(text)
 
         if mode == enums.ParseMode.DISABLED:

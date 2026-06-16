@@ -284,7 +284,7 @@ class SendMessage:
 
         if rich_message is not None:
             if isinstance(rich_message, str):
-                if parse_mode == enums.ParseMode.HTML:
+                if parse_mode in (enums.ParseMode.HTML, enums.ParseMode.RICH_HTML):
                     rich_message = raw.types.InputRichMessageHTML(
                         html=rich_message,
                         rtl=is_rtl,
