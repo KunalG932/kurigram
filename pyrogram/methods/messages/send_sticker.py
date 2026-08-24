@@ -56,6 +56,7 @@ class SendSticker:
             "types.ReplyKeyboardRemove",
             "types.ForceReply"
         ] = None,
+        ephemeral_message_parameters: Optional["types.EphemeralMessageParameters"] = None,
         progress: Callable = None,
         progress_args: tuple = (),
 

@@ -787,6 +787,12 @@ class Message(Object, Update):
         guest_bot_caller_user: Optional["types.User"] = None,
         guest_bot_caller_chat: Optional["types.Chat"] = None,
         rich_message: Optional["types.RichMessage"] = None,
+        community_chat_joined: Optional["types.CommunityChatJoined"] = None,
+        community_chat_added: Optional["types.CommunityChatAdded"] = None,
+        community_chat_removed: Optional["types.CommunityChatRemoved"] = None,
+        receiver_user: Optional["types.User"] = None,
+        ephemeral_message_id: Optional[int] = None,
+        unique_gift_info: Optional["types.UniqueGiftInfo"] = None,
         raw: Optional["raw.types.Message"] = None
     ):
         super().__init__(client)
@@ -954,6 +960,12 @@ class Message(Object, Update):
         self.guest_bot_caller_user = guest_bot_caller_user
         self.guest_bot_caller_chat = guest_bot_caller_chat
         self.rich_message = rich_message
+        self.community_chat_joined = community_chat_joined
+        self.community_chat_added = community_chat_added
+        self.community_chat_removed = community_chat_removed
+        self.receiver_user = receiver_user
+        self.ephemeral_message_id = ephemeral_message_id
+        self.unique_gift_info = unique_gift_info
         self.raw = raw
 
     @staticmethod

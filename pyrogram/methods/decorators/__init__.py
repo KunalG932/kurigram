@@ -33,6 +33,7 @@ from .on_error import OnError
 from .on_guest_message import OnGuestMessage
 from .on_inline_query import OnInlineQuery
 from .on_managed_bot import OnManagedBot
+from .on_message_generation_stopped import OnMessageGenerationStopped
 from .on_message import OnMessage
 from .on_message_reaction import OnMessageReaction
 from .on_message_reaction_count import OnMessageReactionCount
@@ -65,6 +66,7 @@ class Decorators(
     OnGuestMessage,
     OnInlineQuery,
     OnManagedBot,
+    OnMessageGenerationStopped,
     OnMessage,
     OnMessageReaction,
     OnMessageReactionCount,

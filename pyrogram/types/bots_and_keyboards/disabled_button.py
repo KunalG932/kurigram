@@ -16,25 +16,16 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from enum import auto
-
-from .auto_name import AutoName
+from ..object import Object
 
 
-class ButtonStyle(AutoName):
-    """Button style type enumeration used in :obj:`~pyrogram.types.KeyboardButton` and :obj:`~pyrogram.types.InlineKeyboardButton`."""
+class DisabledButton(Object):
+    """This object represents a disabled button which does nothing. Currently holds no information."""
 
-    DEFAULT = auto()
-    "The button has default style"
+    def __init__(self):
+        super().__init__()
 
-    PRIMARY = auto()
-    "The button has dark blue color"
-
-    DANGER = auto()
-    "The button has red color"
-
-    SUCCESS = auto()
-    "The button has green color"
-
-    LINK = auto()
-    "The button is shown as a regular link without borders"
+    @staticmethod
+    def _parse(client, disabled_button) -> "DisabledButton":
+        if disabled_button is not None:
+            return DisabledButton()

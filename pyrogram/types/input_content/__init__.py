@@ -59,6 +59,11 @@ from .input_privacy_rule_disallow_contacts import InputPrivacyRuleDisallowContac
 from .input_privacy_rule_disallow_users import InputPrivacyRuleDisallowUsers
 from .input_text_message_content import InputTextMessageContent
 from .input_venue_message_content import InputVenueMessageContent
+from .input_rich_block_buttons import InputRichBlockButtons
+from .input_rich_block_table import InputRichBlockTable
+from .input_rich_block_expandable_block_quotation import InputRichBlockExpandableBlockQuotation
+from .input_rich_block_document import InputRichBlockDocument
+from .input_rich_message import InputRichMessage, InputRichMessageMedia, InputRichMessageContent
 
 __all__ = [
     "InputChatPhoto",
@@ -106,5 +111,12 @@ __all__ = [
     "InputPrivacyRuleDisallowContacts",
     "InputPrivacyRuleDisallowUsers",
     "InputTextMessageContent",
-    "InputVenueMessageContent"
+    "InputVenueMessageContent",
+    "InputRichBlockButtons",
+    "InputRichBlockTable",
+    "InputRichBlockExpandableBlockQuotation",
+    "InputRichBlockDocument",
+    "InputRichMessage",
+    "InputRichMessageMedia",
+    "InputRichMessageContent",
 ]

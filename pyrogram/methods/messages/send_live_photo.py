@@ -61,6 +61,7 @@ class SendLivePhoto:
             "types.ReplyKeyboardRemove",
             "types.ForceReply",
         ] = None,
+        ephemeral_message_parameters: Optional["types.EphemeralMessageParameters"] = None,
         progress: Optional[Callable] = None,
         progress_args: tuple = (),
     ) -> Optional["types.Message"]:

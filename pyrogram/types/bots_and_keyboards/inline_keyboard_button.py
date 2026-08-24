@@ -89,6 +89,12 @@ class InlineKeyboardButton(Object):
 
         style (:obj:`~pyrogram.enums.ButtonStyle`, *optional*):
             Style of the button.
+
+        disabled (``bool`` | :obj:`~pyrogram.types.DisabledButton`, *optional*):
+            If set, then the button is disabled and does nothing.
+
+        switch_inline_query_chosen_chat (:obj:`~pyrogram.types.SwitchInlineQueryChosenChat`, *optional*):
+            If set, pressing the button will prompt the user to select one of their chats of the specified type.
     """
 
     def __init__(
@@ -101,12 +107,14 @@ class InlineKeyboardButton(Object):
         user_id: Optional[int] = None,
         switch_inline_query: Optional[str] = None,
         switch_inline_query_current_chat: Optional[str] = None,
+        switch_inline_query_chosen_chat: Optional["types.SwitchInlineQueryChosenChat"] = None,
         callback_game: Optional["types.CallbackGame"] = None,
         requires_password: Optional[bool] = None,
         pay: Optional[bool] = None,
-        copy_text: Optional[str] = None,
+        copy_text: Optional[Union[str, "types.CopyTextButton"]] = None,
         icon_custom_emoji_id: Optional[str] = None,
-        style: "enums.ButtonStyle" = enums.ButtonStyle.DEFAULT
+        style: "enums.ButtonStyle" = enums.ButtonStyle.DEFAULT,
+        disabled: Optional[Union[bool, "types.DisabledButton"]] = None,
     ):
         super().__init__()
 
@@ -118,12 +126,14 @@ class InlineKeyboardButton(Object):
         self.user_id = user_id
         self.switch_inline_query = switch_inline_query
         self.switch_inline_query_current_chat = switch_inline_query_current_chat
+        self.switch_inline_query_chosen_chat = switch_inline_query_chosen_chat
         self.callback_game = callback_game
         self.requires_password = requires_password
         self.pay = pay
         self.copy_text = copy_text
         self.icon_custom_emoji_id = icon_custom_emoji_id
         self.style = style
+        self.disabled = disabled
 
     @staticmethod
     def read(b: "raw.base.KeyboardButton"):

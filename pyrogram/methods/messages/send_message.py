@@ -56,6 +56,7 @@ class SendMessage:
         rich_message: Optional[Union[str, "raw.base.InputRichMessage"]] = None,
         is_rtl: Optional[bool] = None,
         skip_entity_detection: Optional[bool] = None,
+        ephemeral_message_parameters: Optional["types.EphemeralMessageParameters"] = None,
 
         reply_to_message_id: Optional[int] = None,
         reply_to_chat_id: Optional[Union[int, str]] = None,

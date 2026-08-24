@@ -41,6 +41,7 @@ from pyrogram.handlers import (
     Handler,
     InlineQueryHandler,
     ManagedBotUpdatedHandler,
+    MessageGenerationStoppedHandler,
     MessageHandler,
     MessageReactionCountHandler,
     MessageReactionHandler,

@@ -81,6 +81,13 @@ from .send_location import SendLocation
 from .send_media_group import SendMediaGroup
 from .send_message_draft import SendMessageDraft
 from .send_message import SendMessage
+from .send_rich_message_draft import SendRichMessageDraft
+from .send_rich_message import SendRichMessage
+from .edit_ephemeral_message_text import EditEphemeralMessageText
+from .edit_ephemeral_message_media import EditEphemeralMessageMedia
+from .edit_ephemeral_message_caption import EditEphemeralMessageCaption
+from .edit_ephemeral_message_reply_markup import EditEphemeralMessageReplyMarkup
+from .delete_ephemeral_message import DeleteEphemeralMessage
 from .send_paid_media import SendPaidMedia
 from .send_paid_reaction import SendPaidReaction
 from .send_photo import SendPhoto
@@ -118,6 +125,11 @@ class Messages(
     EditMessageReplyMarkup,
     EditMessageMedia,
     EditMessageText,
+    EditEphemeralMessageText,
+    EditEphemeralMessageMedia,
+    EditEphemeralMessageCaption,
+    EditEphemeralMessageReplyMarkup,
+    DeleteEphemeralMessage,
     FixTextWithAI,
     ForwardMediaGroup,
     ForwardMessages,
@@ -141,6 +153,8 @@ class Messages(
     SendMediaGroup,
     SendMessageDraft,
     SendMessage,
+    SendRichMessageDraft,
+    SendRichMessage,
     SendPaidMedia,
     SendPaidReaction,
     SendPhoto,

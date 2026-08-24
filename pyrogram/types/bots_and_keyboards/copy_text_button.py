@@ -16,25 +16,24 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from enum import auto
+from typing import Optional
+from ..object import Object
 
-from .auto_name import AutoName
 
+class CopyTextButton(Object):
+    """This object represents an inline keyboard button that copies specified text to the clipboard.
 
-class ButtonStyle(AutoName):
-    """Button style type enumeration used in :obj:`~pyrogram.types.KeyboardButton` and :obj:`~pyrogram.types.InlineKeyboardButton`."""
+    Parameters:
+        text (``str``):
+            The text to be copied to the clipboard; 1-256 characters.
+    """
 
-    DEFAULT = auto()
-    "The button has default style"
+    def __init__(self, text: str):
+        super().__init__()
+        self.text = str(text)
 
-    PRIMARY = auto()
-    "The button has dark blue color"
-
-    DANGER = auto()
-    "The button has red color"
-
-    SUCCESS = auto()
-    "The button has green color"
-
-    LINK = auto()
-    "The button is shown as a regular link without borders"
+    @staticmethod
+    def _parse(client, copy_text_button) -> Optional["CopyTextButton"]:
+        if copy_text_button is not None:
+            text = getattr(copy_text_button, "text", copy_text_button)
+            return CopyTextButton(text=text)

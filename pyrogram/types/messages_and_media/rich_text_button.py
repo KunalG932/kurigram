@@ -16,25 +16,27 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from enum import auto
+from typing import Optional
+from pyrogram import types
+from ..object import Object
 
-from .auto_name import AutoName
 
+class RichTextButton(Object):
+    """Represents a button in rich formatted text.
 
-class ButtonStyle(AutoName):
-    """Button style type enumeration used in :obj:`~pyrogram.types.KeyboardButton` and :obj:`~pyrogram.types.InlineKeyboardButton`."""
+    Parameters:
+        button (:obj:`~pyrogram.types.RichMessageButton`):
+            The button.
 
-    DEFAULT = auto()
-    "The button has default style"
+        type (``str``, *optional*):
+            Type of the rich text, always "button".
+    """
 
-    PRIMARY = auto()
-    "The button has dark blue color"
-
-    DANGER = auto()
-    "The button has red color"
-
-    SUCCESS = auto()
-    "The button has green color"
-
-    LINK = auto()
-    "The button is shown as a regular link without borders"
+    def __init__(
+        self,
+        button: "types.RichMessageButton",
+        type: str = "button"
+    ):
+        super().__init__()
+        self.button = button
+        self.type = type

@@ -145,6 +145,16 @@ from .voice import Voice
 from .web_app_data import WebAppData
 from .web_page import WebPage
 from .write_access_allowed import WriteAccessAllowed
+from .rich_text_button import RichTextButton
+from .rich_block_buttons import RichBlockButtons
+from .rich_block_table import RichBlockTable, RichBlockTableCell
+from .rich_block_expandable_block_quotation import RichBlockExpandableBlockQuotation
+from .rich_block_document import RichBlockDocument
+from .ephemeral_message_parameters import EphemeralMessageParameters
+from .message_generation_stopped import MessageGenerationStopped
+from .community import Community, CommunityChatAdded, CommunityChatRemoved
+from .community_chat_joined import CommunityChatJoined
+from .unique_gift_info import UniqueGiftInfo
 
 __all__ = [
     "Animation",
@@ -290,4 +300,17 @@ __all__ = [
     "WebAppData",
     "WebPage",
     "WriteAccessAllowed",
+    "RichTextButton",
+    "RichBlockButtons",
+    "RichBlockTable",
+    "RichBlockTableCell",
+    "RichBlockExpandableBlockQuotation",
+    "RichBlockDocument",
+    "EphemeralMessageParameters",
+    "MessageGenerationStopped",
+    "Community",
+    "CommunityChatAdded",
+    "CommunityChatRemoved",
+    "CommunityChatJoined",
+    "UniqueGiftInfo",
 ]

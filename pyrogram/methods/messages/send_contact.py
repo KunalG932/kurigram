@@ -50,6 +50,7 @@ class SendContact:
             "types.ReplyKeyboardRemove",
             "types.ForceReply"
         ] = None,
+        ephemeral_message_parameters: Optional["types.EphemeralMessageParameters"] = None,
 
         reply_to_message_id: int = None,
         reply_to_chat_id: Union[int, str] = None,

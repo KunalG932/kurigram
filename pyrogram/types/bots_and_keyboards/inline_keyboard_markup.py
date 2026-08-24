@@ -16,7 +16,7 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from typing import List
+from typing import List, Optional
 
 import pyrogram
 from pyrogram import raw
@@ -30,12 +30,20 @@ class InlineKeyboardMarkup(Object):
     Parameters:
         inline_keyboard (List of List of :obj:`~pyrogram.types.InlineKeyboardButton`):
             List of button rows, each represented by a List of InlineKeyboardButton objects.
+
+        force_reply (``bool``, *optional*):
+            Pass True if the reply interface must be shown to the user, as if they had manually selected the bot's message and tapped 'Reply'.
     """
 
-    def __init__(self, inline_keyboard: List[List["types.InlineKeyboardButton"]]):
+    def __init__(
+        self,
+        inline_keyboard: List[List["types.InlineKeyboardButton"]],
+        force_reply: Optional[bool] = None
+    ):
         super().__init__()
 
         self.inline_keyboard = inline_keyboard
+        self.force_reply = force_reply
 
     @staticmethod
     def read(o):

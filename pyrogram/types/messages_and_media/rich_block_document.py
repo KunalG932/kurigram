@@ -16,25 +16,32 @@
 #  You should have received a copy of the GNU Lesser General Public License
 #  along with Pyrogram.  If not, see <http://www.gnu.org/licenses/>.
 
-from enum import auto
+from typing import Optional, Union
+from pyrogram import types
+from ..object import Object
 
-from .auto_name import AutoName
 
+class RichBlockDocument(Object):
+    """A block with a general file, corresponding to the custom HTML tag <tg-document>.
 
-class ButtonStyle(AutoName):
-    """Button style type enumeration used in :obj:`~pyrogram.types.KeyboardButton` and :obj:`~pyrogram.types.InlineKeyboardButton`."""
+    Parameters:
+        document (:obj:`~pyrogram.types.Document`):
+            The document.
 
-    DEFAULT = auto()
-    "The button has default style"
+        caption (``str`` | :obj:`~pyrogram.types.RichText`, *optional*):
+            Caption of the block.
 
-    PRIMARY = auto()
-    "The button has dark blue color"
+        type (``str``, *optional*):
+            Type of the block, always "document".
+    """
 
-    DANGER = auto()
-    "The button has red color"
-
-    SUCCESS = auto()
-    "The button has green color"
-
-    LINK = auto()
-    "The button is shown as a regular link without borders"
+    def __init__(
+        self,
+        document: "types.Document",
+        caption: Optional[Union[str, "types.RichText"]] = None,
+        type: str = "document"
+    ):
+        super().__init__()
+        self.document = document
+        self.caption = caption
+        self.type = type
